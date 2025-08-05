@@ -1,0 +1,8 @@
+In EF Install Both
+
+Install-Package Microsoft.EntityFrameworkCore.SqlServer
+Install-Package Microsoft.EntityFrameworkCore.Tools
+
+
+IN SP WAY 
+System.Data.SqlClient
