@@ -12,9 +12,17 @@ namespace CRUD.MVC.SP.Controllers
             _dal = new EmployeeDAL(configuration);
         }
 
-        public IActionResult Index()
+        //public IActionResult Index()
+        //{
+        //    return View(_dal.GetAll());
+        //}
+
+        public IActionResult Index(string searchTerm, int page = 1)
         {
-            return View(_dal.GetAll());
+            int pageSize = 5;
+            var result = _dal.GetAllPagination(searchTerm, page, pageSize);
+            ViewBag.SearchTerm = searchTerm;
+            return View(result);
         }
 
         public IActionResult Details(int id)
