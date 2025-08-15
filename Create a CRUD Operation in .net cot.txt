@@ -1,0 +1,22 @@
+Create a CRUD Operation in .net cote MVC
+In EF Install Both
+
+Install-Package Microsoft.EntityFrameworkCore.SqlServer
+Install-Package Microsoft.EntityFrameworkCore.Tools
+
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=LAPTOP-DH5RI22C\\SQLEXPRESS;Initial Catalog=eshop2;Integrated Security=True;Trust Server Certificate=True"
+  },
+Step 1.
+Product and Category
+We Have Two Entity Product(Id,Name,Description,SellPrice,Invetory,CategoryId)
+Category(Id,Name,Description)
+
+---
+Product CategoryId have Many To Many Category
+
+create a Store Preducre to check a product is already exist or not
+
+-- Category 
+Product Create page have category Dropdown
+

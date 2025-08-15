@@ -199,3 +199,11 @@ namespace CRUD.MVC.SP.DataAccess
 }
 
 ```
+
+now we create a project were we use efcore for(CRUD) and ado.net(for sp)
+
+
+
+
+
+
