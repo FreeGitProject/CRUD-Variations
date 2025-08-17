@@ -2,11 +2,20 @@
 
 @{
     ViewData["Title"] = "Employees";
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
+    string searchString = ViewBag.SearchString ?? "";
 }
 
 <h2>Employees</h2>
-<a class="btn btn-primary mb-2" asp-action="Create">Add New</a>
 
+<!--  Search Form -->
+<form asp-action="Index" method="get" class="mb-3 d-flex gap-2">
+    <input type="text" name="searchString" value="@searchString" placeholder="Search by name or position" class="form-control" />
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<!--  Table -->
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -32,3 +41,15 @@
         }
     </tbody>
 </table>
+
+<!--  Pagination -->
+<nav>
+    <ul class="pagination">
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            <li class="page-item @(i == currentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-searchString="@searchString">@i</a>
+            </li>
+        }
+    </ul>
+</nav>

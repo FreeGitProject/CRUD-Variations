@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using CRUD.MVC.SP.Models;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 
@@ -11,6 +12,44 @@ namespace CRUD.MVC.SP.DataAccess
         public EmployeeDAL(IConfiguration configuration)
         {
             connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
+        public PagedResult<Employee> GetAllPagination(string searchTerm, int pageNumber, int pageSize)
+        {
+            var result = new PagedResult<Employee>();
+            result.Items = new List<Employee>();
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("sp_GetAllEmployees_06082025", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@SearchTerm", string.IsNullOrEmpty(searchTerm) ? (object)DBNull.Value : searchTerm);
+                cmd.Parameters.AddWithValue("@PageNumber", pageNumber);
+                cmd.Parameters.AddWithValue("@PageSize", pageSize);
+                con.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        result.Items.Add(new Employee
+                        {
+                            Id = Convert.ToInt32(dr["Id"]),
+                            Name = dr["Name"].ToString(),
+                            Age = Convert.ToInt32(dr["Age"]),
+                            Department = dr["Department"].ToString()
+                        });
+                    }
+
+                    if (dr.NextResult() && dr.Read())
+                    {
+                        result.TotalRecords = Convert.ToInt32(dr["TotalCount"]);
+                    }
+                }
+            }
+
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            return result;
         }
 
         public List<Employee> GetAll()
