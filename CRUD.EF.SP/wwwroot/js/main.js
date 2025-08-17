@@ -1,4 +1,15 @@
 ﻿$(document).ready(function () {
+    console.log("Hello")
+
+
+    $.ajax({
+        url: '/Product/GetCategories',
+        type: 'GET',
+        success: function (response) {
+            console.log(response);
+        }
+    });
+
     let typingTimer;
     const delay = 400; // wait a little after typing stops
 

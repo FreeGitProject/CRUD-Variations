@@ -1,3 +1,8 @@
+
+Live Data Base 
+"Data Source=crud-wep-api.database.windows.net;Initial Catalog=Eshop_EF_SP;Persist Security Info=True;User ID=avinashgupta;Password=Ankita@123;Trust Server Certificate=True"
+
+
 Create a CRUD Operation in .net cote MVC
 In EF Install Both
 

@@ -12,6 +12,12 @@ namespace CRUD.EF.SP.Models
         public decimal SellPrice { get; set; }
         [Required, Range(1, 100)]
         public int Inventory { get; set; }
-       // public int CategoryId { get; set; }
+
+        // Foreign Key
+        [Required]
+        public int CategoryId { get; set; }
+
+        // Navigation Property
+        public Category? Category { get; set; }
     }
 }

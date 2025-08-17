@@ -1,0 +1,86 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace CRUD.EF.SP.Migrations
+{
+    /// <inheritdoc />
+    public partial class AddCategoryAndProductRelation : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            // 1. Create Categories table
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            // 2. Insert a default Category (General)
+            migrationBuilder.Sql("INSERT INTO Categories (Name) VALUES ('General')");
+
+            // 3. Add CategoryId column to Products (nullable for now)
+            migrationBuilder.AddColumn<int>(
+                name: "CategoryId",
+                table: "Products",
+                type: "int",
+                nullable: true);
+
+            // 4. Update existing products to use the default Category
+            migrationBuilder.Sql("UPDATE Products SET CategoryId = 1"); // since General = Id 1
+
+            // 5. Alter column to NOT NULL
+            migrationBuilder.AlterColumn<int>(
+                name: "CategoryId",
+                table: "Products",
+                type: "int",
+                nullable: false,
+                oldClrType: typeof(int),
+                oldType: "int",
+                oldNullable: true);
+
+            // 6. Create Index
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_CategoryId",
+                table: "Products",
+                column: "CategoryId");
+
+            // 7. Add Foreign Key
+            migrationBuilder.AddForeignKey(
+                name: "FK_Products_Categories_CategoryId",
+                table: "Products",
+                column: "CategoryId",
+                principalTable: "Categories",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+        }
+
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Products_Categories_CategoryId",
+                table: "Products");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Products_CategoryId",
+                table: "Products");
+
+            migrationBuilder.DropColumn(
+                name: "CategoryId",
+                table: "Products");
+        }
+    }
+}

@@ -1,4 +1,5 @@
-﻿using CRUD.EF.SP.Models;
+﻿using CRUD.EF.SP.Data;
+using CRUD.EF.SP.Models;
 using CRUD.EF.SP.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -10,12 +11,14 @@ namespace CRUD.EF.SP.Controllers
         private readonly IProductRepository _productRepository;
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
 
-        public ProductController(IProductRepository productRepository, ILogger<HomeController> logger, IConfiguration configuration)
+        public ProductController(IProductRepository productRepository, ILogger<HomeController> logger, IConfiguration configuration, ApplicationDbContext context)
         {
             _productRepository = productRepository;
             _logger = logger;
             _configuration = configuration;
+            _context = context;
         }
 
         public ActionResult Index()
@@ -92,6 +95,15 @@ namespace CRUD.EF.SP.Controllers
             {
                 return View();
             }
+        }
+
+        [HttpGet]
+        public JsonResult GetCategories() 
+        {
+            List<Category> categories = _context.Categories.ToList();
+
+            return Json(categories);
+
         }
 
         [HttpPost]
