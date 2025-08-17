@@ -6,7 +6,7 @@ namespace CRUD.EF.SP.Models
     {
 
         public int Id { get; set; }
-        [Required,MaxLength(500)]
+        [Required,MaxLength(500),MinLength(3)]
         public required string Name { get; set; }
         [Required]
         public decimal SellPrice { get; set; }

@@ -1,6 +1,7 @@
 ﻿using CRUD.EF.SP.Models;
 using CRUD.EF.SP.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 namespace CRUD.EF.SP.Controllers
 {
@@ -8,11 +9,13 @@ namespace CRUD.EF.SP.Controllers
     {
         private readonly IProductRepository _productRepository;
         private readonly ILogger<HomeController> _logger;
+        private readonly IConfiguration _configuration;
 
-        public ProductController(IProductRepository productRepository, ILogger<HomeController> logger)
+        public ProductController(IProductRepository productRepository, ILogger<HomeController> logger, IConfiguration configuration)
         {
             _productRepository = productRepository;
             _logger = logger;
+            _configuration = configuration;
         }
 
         public ActionResult Index()
@@ -90,5 +93,26 @@ namespace CRUD.EF.SP.Controllers
                 return View();
             }
         }
+
+        [HttpPost]
+        public JsonResult IsProductNameAvailable(string name)
+        {
+            bool exists = false;
+            using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                using (SqlCommand cmd = new SqlCommand("procCheckProductExists",con))
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Name", name);
+
+                    con.Open();
+                    var result = cmd.ExecuteScalar();
+
+                    exists = Convert.ToBoolean(result); 
+                }
+            }
+            return Json(exists); 
+        }
+
     }
 }

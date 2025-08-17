@@ -202,7 +202,11 @@ namespace CRUD.MVC.SP.DataAccess
 
 now we create a project were we use efcore for(CRUD) and ado.net(for sp)
 
-
+    @*       <div class="form-group">
+              <label asp-for="Id" class="control-label"></label>
+              <input asp-for="Id" class="form-control" />
+              <span asp-validation-for="Id" class="text-danger"></span>
+          </div> *@
 
 
 
