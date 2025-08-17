@@ -2,6 +2,7 @@
 using CRUD.EF.SP.Models;
 using CRUD.EF.SP.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 
 namespace CRUD.EF.SP.Controllers
@@ -36,6 +37,7 @@ namespace CRUD.EF.SP.Controllers
 
         public ActionResult Create()
         {
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
 
@@ -46,24 +48,31 @@ namespace CRUD.EF.SP.Controllers
         {
             try
             {
-                _productRepository.CreateProduct(product);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _productRepository.CreateProduct(product);
+                    return RedirectToAction(nameof(Index));
+                }
+               
             }
             catch
             {
                 return View();
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
+            return View(product);
         }
 
         public ActionResult Edit(int id)
         {
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
             Product product = _productRepository.GetProduct(id);
             return View(product);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Product product)//IFormCollection collection)
+        public ActionResult Edit(Product product)//IFormCollection collection)
         {
             try
             {
