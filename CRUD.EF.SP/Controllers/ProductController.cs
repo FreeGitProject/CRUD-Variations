@@ -7,14 +7,17 @@ namespace CRUD.EF.SP.Controllers
     public class ProductController : Controller
     {
         private readonly IProductRepository _productRepository;
+        private readonly ILogger<HomeController> _logger;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductController(IProductRepository productRepository, ILogger<HomeController> logger)
         {
             _productRepository = productRepository;
+            _logger = logger;
         }
 
         public ActionResult Index()
         {
+            _logger.LogInformation("Get Product List");
             List<Product> products = _productRepository.GetAllProducts();
             return View(products);
         }
