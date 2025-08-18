@@ -2,12 +2,19 @@
     console.log("Hello")
 
 
-    $.ajax({
-        url: '/Product/GetCategories',
-        type: 'GET',
-        success: function (response) {
-            console.log(response);
-        }
+    //$.ajax({
+    //    url: '/Product/GetCategories',
+    //    type: 'GET',
+    //    success: function (response) {
+    //        console.log(response);
+    //    }
+    //});
+    $.getJSON('/Product/GetCategories', function (data) {
+        var ddl = $('#CategoryId');
+        ddl.empty();
+        $.each(data, function (i, category) {
+            ddl.append($('<option></option>').val(category.id).html(category.name));
+        });
     });
 
     let typingTimer;
