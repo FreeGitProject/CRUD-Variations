@@ -63,7 +63,7 @@ namespace CRUD.EF.SP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Product product)//IFormCollection collection)
+        public ActionResult Edit( Product product)//IFormCollection collection)
         {
             try
             {

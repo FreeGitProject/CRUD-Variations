@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Edit";
+    var categoryId = @Model?.CategoryId;
+   
 }
 
 <h1>Edit</h1>
@@ -12,16 +14,18 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-          @*   <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div> *@
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label  class="control-label"> category</label>
+                <select name="CategoryId" id="CategoryId" class="form-control"></select>
+
+              
+            </div>
+
             <div class="form-group">
                 <label asp-for="SellPrice" class="control-label"></label>
                 <input asp-for="SellPrice" class="form-control" />
@@ -44,5 +48,70 @@
 </div>
 
 @section Scripts {
+    
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
 }
+@* we cannot use for that beacause @categoryId in is not geted in editproductfine so
+we use direect in html file scripte*@
+@* <script src="~/js/editproduct.js"></script> *@
+<script>
+    var categoryId ='@categoryId';
+   // console.log(categoryId);
+
+        $(document).ready(function () {
+
+         var selectedCategoryId = Number(categoryId);
+
+        $.getJSON('@Url.Action("GetCategories", "Product")', function (data) {
+            var ddl = $('#CategoryId');
+            ddl.empty();
+            ddl.append($('<option></option>').val("").html("Select Category"));
+
+            $.each(data, function (i, category) {
+                var option = $('<option></option>').val(category.id).html(category.name);
+                    if (category.id == selectedCategoryId) {
+        option.attr("selected", "selected");
+    }
+
+                ddl.append(option);
+            });
+
+
+        });
+
+        let typingTimer;
+        const delay = 400; // wait a little after typing stops
+
+        $("#ProductName").on("keyup", function () {
+            clearTimeout(typingTimer);
+            var name = $(this).val();
+
+            if (name.length >= 3) {
+                typingTimer = setTimeout(function () {
+                    //    console.log("hello");
+                    $.ajax({
+                        url: '/Product/IsProductNameAvailable',
+                        type: 'POST',
+                        data: { name: name },
+                        success: function (response) {
+                            if (response) {
+                                $('#NameValidationMessage').removeClass('text-success').addClass('text-danger');
+                                $("#NameValidationMessage").text("Product name already exists.");
+                                console.log("ProductExixt");
+                            }
+                            else {
+                                $('#NameValidationMessage').removeClass('text-danger').addClass('text-success');
+                                $("#NameValidationMessage").text("Product available to create.");
+                            }
+
+                        }
+                    });
+                }, delay);
+            }
+
+
+        });
+
+    });
+</script>
