@@ -37,7 +37,7 @@ namespace CRUD.EF.SP.Controllers
 
         public ActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
+            ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
 
@@ -59,13 +59,13 @@ namespace CRUD.EF.SP.Controllers
             {
                 return View();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
+            ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
             return View(product);
         }
 
         public ActionResult Edit(int id)
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
+            ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name");
             Product product = _productRepository.GetProduct(id);
             return View(product);
         }
