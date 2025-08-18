@@ -1,7 +1,9 @@
 ﻿using CRUD.EF.SP.Data;
+using CRUD.EF.SP.DTOs.Products;
 using CRUD.EF.SP.Models;
 using CRUD.EF.SP.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 
 namespace CRUD.EF.SP.Controllers
@@ -36,7 +38,14 @@ namespace CRUD.EF.SP.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            var viewModel = new ProductDetailDto
+            {
+                Product = new Product(),
+                Categories = _context.Categories
+                    .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
+                    .ToList()
+            };
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -58,7 +67,14 @@ namespace CRUD.EF.SP.Controllers
         public ActionResult Edit(int id)
         {
             Product product = _productRepository.GetProduct(id);
-            return View(product);
+            var viewModel = new ProductDetailDto
+            {
+                Product = product,
+                Categories = _context.Categories
+                    .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
+                    .ToList()
+            };
+            return View(viewModel);
         }
 
         [HttpPost]
